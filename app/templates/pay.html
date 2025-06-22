@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/pay_page.css') }}?v=1.3">
+    <title>Указание данных для бронирования</title>
+</head>
+<body>
+    <header class="header">
+        <h1>Бронирование парковочных мест</h1>
+    </header>
+    
+    <div class="payment-container" id="form-container">
+        <h2 id="form-title">Указание данных для бронирования</h2>
+        <form id="form">
+            <div class="form-group">
+                <label for="car_number">Номер автомобиля</label>
+                <input type="text" id="car_number" name="car_number" placeholder="Номер автомобиля" required>
+            </div>
+            <div class="form-group">
+                <label for="car_brand">Марка автомобиля</label>
+                <select id="car_brand" name="car_brand" required>
+                    <option value="" disabled selected>Выберите марку автомобиля</option>
+                    <option value="Toyota">Toyota</option>
+                    <option value="Volkswagen">Volkswagen</option>
+                    <option value="Ford">Ford</option>
+                    <option value="BMW">BMW</option>
+                    <option value="Mercedes-Benz">Mercedes-Benz</option>
+                    <option value="Audi">Audi</option>
+                    <option value="Hyundai">Hyundai</option>
+                    <option value="Nissan">Nissan</option>
+                    <option value="Kia">Kia</option>
+                    <option value="Renault">Renault</option>
+                </select>
+            </div>
+            <button type="button" class="submit-btn" id="submit-data">Оплатить через Telegram</button>
+        </form>
+        <button type="button" id="cancel-booking" class="cancel-btn">Отказаться от бронирования</button>
+    </div>
+
+    <div id="cancelBookingModal" class="modal hide">
+        <div class="modal-content">
+            <span class="close">×</span> 
+            <div class="modal-header">
+                <h2>Подтверждение отмены</h2>
+            </div>
+            <div class="modal-body">
+                <p>Бронирование отменится в течение 60 минут</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmCancelBtn" class="modal-btn confirm">Подтвердить отмену</button>
+                <button class="modal-btn cancel">Отмена</button>
+            </div>
+        </div>
+    </div>   
+    <script>
+        window.amount = `{{ amount | tojson }}`;
+        window.user_id = `{{ user_id | tojson }}`;
+        window.booking_id = `{{ booking_id | tojson }}`;
+    </script>
+     
+    <script src="{{ url_for('static', path='/js/payment.js') }}?v=1.1"></script>
+</body>
+</html>

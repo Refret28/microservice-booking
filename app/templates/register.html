@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Бронирование парковочных мест</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/register_page.css') }}?v=1.2">
+</head>
+<body>
+    <header class="header">
+        <h1>Бронирование парковочных мест</h1>
+    </header>
+
+    <div class="login-container">
+        <h2>Регистрация</h2>
+        <form id="register-form" action="/register" method="post">
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="text" id="username" name="username" required placeholder="Ваше имя">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="email" id="email" name="email" required placeholder="Ваша почта">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="tel" id="phone" name="phone" pattern="^\+?\d{10,15}$" required placeholder="Ваш номер телефона">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="password" required placeholder="Ваш пароль">  
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Зарегистрироваться</button>
+        </form>
+        
+        <p>Уже зарегистрированы? <a href="/login">Войти</a></p>
+    </div>
+
+    <div id="authErrorNotification" class="notification hide">
+        <span class="close">×</span>
+        <p id="notification-message"></p>
+    </div>
+
+    <script src="{{ url_for('static', path='/js/register_pg.js') }}?v=1.2"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация - Бронирование парковочных мест</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/register_page.css') }}?v=1.2">
+</head>
+<body>
+    <header class="header">
+        <h1>Бронирование парковочных мест</h1>
+    </header>
+
+    <div class="login-container">
+        <h2>Авторизация</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <span class="icon">@</span>
+                    <input type="email" id="modal-email" name="email" required placeholder="Ваша почта">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="modal-password" name="password" required placeholder="Ваш пароль">
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Войти</button>
+        </form>
+        <p>Не зарегистрированы? <a href="register">Зарегистрироваться</a></p>
+    </div>
+
+    <div id="authErrorNotification" class="notification hide">
+        Ошибка авторизации! Попробуйте еще раз.
+    </div>
+
+    <script src="{{ url_for('static', path='/js/register_pg.js') }}?v=1.1"></script>
+</body>
+</html>

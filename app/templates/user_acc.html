@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/usr_acc_page.css') }}?v=1.9">
+</head>
+<body>
+    <header>
+        <h1>Личный кабинет</h1>
+    </header>
+    <div class="container">
+        <h2>Добро пожаловать, {{ username }}!</h2>
+        
+        <div class="user-info">
+            <h3>Ваша информация:</h3>
+            <p><strong>Имя пользователя:</strong> {{ username }}</p>
+            <p><strong>Email:</strong> {{ email }}</p>
+            <p><strong>Телефон:</strong> {{ phone }}</p>
+        </div>
+
+     <h3>Ваши бронирования:</h3>
+        {% if bookings and bookings|length > 0 %}
+            <div class="bookings-container">
+                {% for booking in bookings %}
+                    {% if booking.address and booking.spot_number and booking.start_time and booking.end_time %}
+                        <div class="booking-item" data-booking-id="{{ booking.booking_id }}">
+                            <div class="booking-info">
+                                <strong>Парковка:</strong> {{ booking.address }}<br>
+                                <strong>Место:</strong> {{ booking.spot_number }}<br>
+                                {% if booking.floor is not none %}
+                                    <strong>Этаж:</strong> {{ booking.floor }}<br> 
+                                {% endif %}
+                                <strong>Период:</strong> {{ booking.start_time }} - {{ booking.end_time }}<br>
+
+                                {% if booking.cars and booking.cars|length > 0 %}
+                                    <strong>Автомобиль:</strong>
+                                        {% for car in booking.cars %}
+                                            <li>{{ car.car_brand }}</li>
+                                    <strong>Номер:</strong>
+                                            <li>{{ car.car_number }}</li>
+                                        {% endfor %}
+                                {% else %}
+                                    <em>Автомобили не указаны</em>
+                                {% endif %}
+
+                                <div class="booking-actions">
+                                    <button onclick="viewPaymentDetails('{{ booking.booking_id }}')" class="payment-details-btn">Просмотреть детали оплаты</button>
+                                    <button onclick="openCancelModal('{{ booking.booking_id }}')" class="cancel-btn">Отменить</button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Информация отсутствует</p>
+        {% endif %}
+
+        <div id="cancelModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <p>Бронирование можно отменить максимум за сутки до активации!</p>
+                <div class="modal-buttons">
+                    <button id="confirmCancel" class="confirm-btn">Отменить</button>
+                    <button onclick="closeCancelModal()" class="exit-btn">Выйти</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="successNotification" class="notification" style="display: none;">
+            <p>Бронирование успешно отменено</p>
+        </div>
+
+        <div id="errorModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <p>Ошибка при отмене бронирования. Попробуйте снова!</p>
+                <div class="modal-buttons">
+                    <button onclick="closeErrorModal()" class="exit-btn">ОК</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="deletingNotification" class="notification" style="display: none;">
+            <p>Бронирование в процессе удаления</p>
+        </div>
+        
+        <a href="/main_page?user_id={{ user_id }}" class="back-link">Вернуться на главную</a>
+    </div>
+    <script src="{{ url_for('static', path='/js/usr-acc.js') }}?v=1.2"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/waiting_page.css') }}?v=1.1">
+    <title>Ожидание сохранения</title>
+</head>
+<body>
+    <header class="header">
+        <h1>Бронирование парковочных мест</h1>
+    </header>
+
+    <div class="content">
+        <h2>Сохранение данных</h2>
+        <div class="loader">
+            <div class="circle"></div>
+        </div>
+        <div class="countdown">
+            <p>Переадресация через <span id="countdown-timer">3</span> секунды...</p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', path='/js/wait_pg.js') }}"></script>
+</body>
+</html>

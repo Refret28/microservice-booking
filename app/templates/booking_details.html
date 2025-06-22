@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Данные о бронировании</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/booking_details.css') }}?v=1.2" />
+</head>
+<body>
+    <header class="header">
+        <h1>Данные о бронировании</h1>
+    </header>
+    <div class="container">
+        <h2>Информация о бронировании и оплате</h2>
+        <p><strong>Сумма бронирования:</strong> {{ amount }} руб.</p>
+        <p><strong>Статус оплаты:</strong> 
+            {% if payment_status == "Completed" %}
+                Подтвержден
+            {% elif payment_status == "Cancelled" %}
+                Отменен
+            {% else %}
+                {{ payment_status }}
+            {% endif %}
+        </p>
+        <p><strong>ID транзакции:</strong> {{ transaction_id }}</p>
+
+        <script>
+            window.user_id = `{{ user_id | tojson }}`;
+        </script>
+
+        <a href="/user_acc/{{ user_id }}" class="back-link">Вернуться в личный кабинет</a>
+    </div>
+</body>
+</html>

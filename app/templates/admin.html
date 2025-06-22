@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кабинет администратора</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/admin_page.css') }}?v=1.1">
+</head>
+<body>
+    <header class="header">
+        <h1>Кабинет администратора</h1>
+        <a href="/logout" class="logout-btn">Выйти</a>
+    </header>
+
+    <div class="admin-container">
+        <nav class="tabs-nav">
+            <ul>
+                <li class="tab-link active" data-tab="parking">Управление парковками</li>
+                <li class="tab-link" data-tab="users">Пользователи</li>
+                <li class="tab-link" data-tab="analytics">Аналитика</li>
+            </ul>
+        </nav>
+
+        <div id="parking-tab" class="tab-content active">
+            <h2>Управление парковочными местами</h2>
+            <div class="form-group">
+                <label for="parking-select">Выберите парковку</label>
+                <select id="parking-select">
+                    <option value="" disabled selected>Выберите парковку</option>
+                    {% for parking in parkings %}
+                        <option value="{{ parking.LocationID }}">{{ parking.Address }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="floor-buttons" class="floor-buttons"></div>
+            <div id="spots-tables"></div>
+        </div>
+
+        <div id="users-tab" class="tab-content">
+            <h2>Данные пользователей</h2>
+            <div class="table-controls">
+                <button id="refresh-users-btn" class="refresh-btn">Обновить</button>
+            </div>
+            <table id="users-table" class="users-table">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body"></tbody>
+            </table>
+        </div>
+
+        <div id="analytics-tab" class="tab-content">
+            <h2>Аналитика</h2>
+            <div class="form-group">
+                <label>Выберите диапазон дат</label>
+                <div class="analytics-controls">
+                    <div class="date-input-group">
+                        <label for="start-date">Дата начала:</label>
+                        <input type="date" id="start-date" class="date-input">
+                    </div>
+                    <div class="date-input-group">
+                        <label for="end-date">Дата окончания:</label>
+                        <input type="date" id="end-date" class="date-input">
+                    </div>
+                </div>
+            </div>
+            <div class="analytics-charts">
+                <div class="chart-container">
+                    <h3>Рейтинг парковок</h3>
+                    <canvas id="parkings-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Топ-5 мест по среднему времени бронирования</h3>
+                    <canvas id="spots-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Доход по парковкам</h3>
+                    <canvas id="revenue-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="bookingsModal" class="modal">
+            <div class="modal-content">
+                <span class="close">×</span>
+                <h3>Бронирования пользователя</h3>
+                <table id="bookings-table" class="bookings-table">
+                    <thead>
+                        <tr>
+                            <th>ID брони</th>
+                            <th>Парковка</th>
+                            <th>Этаж</th>
+                            <th>Начало</th>
+                            <th>Конец</th>
+                            <th>Марка автомобиля</th>
+                            <th>Номер автомобиля</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="notification" class="notification" style="display: none;"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', path='/js/admin_pg.js') }}?v=1.3"></script>
+</body>
+</html>

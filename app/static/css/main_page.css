@@ -1,0 +1,584 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0; 
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; 
+    font-family: 'Montserrat', sans-serif;
+    background-color: #4CAF50;
+}
+
+html, body {
+    overflow-y: auto; 
+}
+
+html.no-scroll, body.no-scroll {
+    overflow: hidden !important;
+    height: 100% !important;
+    width: 100vw !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    -webkit-overflow-scrolling: none !important;
+    overscroll-behavior: none !important;
+}
+
+html.no-scroll::-webkit-scrollbar,
+body.no-scroll::-webkit-scrollbar {
+    display: none !important; 
+}
+
+html.no-scroll,
+body.no-scroll {
+    -ms-overflow-style: none !important; 
+    scrollbar-width: none !important; 
+}
+
+.header {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    box-sizing: border-box;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.hamburger-container {
+    position: fixed;
+    top: 5px;
+    right: 10px;
+    z-index: 1000;
+}
+
+@media (max-width: 600px) {
+    .header {
+        padding: 10px 20px;
+        text-align: center;
+    }
+    .header h1 {
+        font-size: 18px;
+    }
+}
+
+.booking-container {
+    background-color: #a9e8af;
+    padding: 20px 30px;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    font-size: 14px;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+select,
+input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.datetime-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.datetime-container .form-group {
+    flex: 1;
+    margin: 0;
+}
+
+.datetime-container input[type="datetime-local"] {
+    width: 100%;
+    height: 38px;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+@media (max-width: 600px) {
+    .datetime-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .datetime-container .form-group {
+        margin-bottom: 10px;
+    }
+}
+
+.image-container {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-control-attribution {
+    display: none !important;
+}
+
+.submit-btn, .btn-booking, .choose-place {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.submit-btn:hover, .btn-booking:hover, .choose-place:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.submit-btn:active, .btn-booking:active, .choose-place:active {
+    background-color: #3e8e41;
+    transform: scale(0.95);
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(100%);
+    z-index: 1000;
+    padding: 20px;
+    pointer-events: none;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+.sidebar .close-btn {
+    color: white;
+    font-size: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 40px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.hamburger::before,
+.hamburger .middle,
+.hamburger::after {
+    content: '';
+    width: 40px;
+    height: 4px;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.hamburger::before {
+    position: relative;
+    top: 0px;
+}
+
+.hamburger .middle {
+    position: relative;
+}
+
+.hamburger::after {
+    position: relative;
+    top: 0px;
+}
+
+.hamburger.active::before {
+    transform: translateY(12px) rotate(45deg);
+}
+
+.hamburger.active .middle {
+    opacity: 0;
+}
+
+.hamburger.active::after {
+    transform: translateY(-12px) rotate(-45deg);
+}
+
+.modal {
+    position: fixed;
+    z-index: 1100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 1100px;
+    border-radius: 8px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    max-height: 100vh; 
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease-out;
+}
+
+#spotModal .modal-content {
+    max-width: 1100px;
+}
+
+#spotConfirmationModal .modal-content {
+    max-width: 400px;
+    text-align: center;
+    padding: 15px;
+    animation: fadeInOut 2s ease-in-out;
+}
+
+#spotConfirmationModal p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.modal-view{
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 600px;
+    max-width: 1100px;
+    border-radius: 8px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.modal-footer {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.close, #modalClosePastDateBtn, #modalCloseTimeDifferenceBtn, 
+#modalCloseOccupiedParkingBtn, #modalCloseBookingInfoBtn {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.close:hover, .close:focus,
+#modalClosePastDateBtn:hover, #modalCloseTimeDifferenceBtn:hover,
+#modalCloseOccupiedParkingBtn:hover, #modalCloseBookingInfoBtn:hover {
+    color: black;
+}
+
+#spotsList {
+    flex: 1;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    -webkit-overflow-scrolling: touch;
+}
+
+.spots-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.spots-table th,
+.spots-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.spots-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.spot-cell {
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.spot-cell:hover {
+    background-color: #e0e0e0;
+}
+
+.spot-cell.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.spot-cell.occupied {
+    background-color: #ff4444;
+    color: white;
+    cursor: not-allowed;
+}
+
+#parkingSchemeContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#parkingSchemeContainer h4 {
+    margin: 0 0 10px 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+#galleryControls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.gallery-btn {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.gallery-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#currentFloor {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+
+#parkingScheme {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#noSchemeText {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    color: #888;
+    margin: 10px 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-20px); }
+    20% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+}
+
+@media (max-width: 600px) {
+    .modal-body {
+        flex-direction: column;
+        gap: 10px;
+    }
+    #spotsList, #parkingSchemeContainer {
+        flex: none;
+        width: 100%;
+    }
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+    }
+}
+
+.modal-btn {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-booking {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white; 
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    border: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.logout-btn{
+    position: fixed;
+    bottom: 20px; 
+    left: 50%;
+    transform: translateX(-50%); 
+}
+
+#price{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.notification {
+    position: fixed;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    display: none; 
+}
+
+.notification.show {
+    opacity: 1;
+    display: block; 
+}
+
+.notification.hide {
+    opacity: 0;
+    display: none; 
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+}
+.modal-content p {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+.modal-content p strong {
+    color: #555;
+}

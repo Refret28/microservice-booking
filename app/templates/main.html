@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование парковочного места</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main_page.css') }}?v=1.2">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Бронирование парковочных мест</h1>
+            <div class="hamburger-container">
+                <button class="hamburger" onclick="toggleSidebar()">
+                    <div class="middle"></div>
+                </button>
+            </div>
+        </div>
+    </header>    
+    
+    <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}">
+
+    <div id="parkingModal" class="modal {{ modal_class }}">
+        <div class="modal-view">
+            <div class="modal-header">
+                <h2>Предупреждение о занятых парковках</h2>
+            </div>
+            <div class="modal-body">
+                {% if occupied_parking %}
+                    {% for parking in occupied_parking %}
+                        <p>Адрес: {{ parking.address }} 
+                            {% if parking.floors is none %}
+                                — Парковка полностью занята.
+                            {% else %}
+                                — Заняты этажи: {{ parking.floors | sort | join(", ") }}
+                            {% endif %}
+                        </p>
+                    {% endfor %}
+                {% else %}
+                    <p>Все парковочные места доступны.</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button id="modalCloseBtn" class="modal-btn">Закрыть</button>
+            </div>
+        </div>
+    </div>    
+    
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="closeSidebar()">×</span>
+        <h1>Добро пожаловать, {{ username }}</h1>
+        <p><a href="/user_acc/{{ user_id }}">Перейти в личный кабинет</a></p>
+        <p><a href="/logout" class="logout-btn">Выйти</a></p>
+    </div>
+
+    <div class="booking-container">
+        <h2>Забронировать парковочное место</h2>
+            
+        <div id="map" style="height: 300px; margin-top: 15px;"></div>
+
+        <div id="location-info" style="margin-top: 10px;">
+            <p><strong>Адрес:</strong> <span id="address"></span></p>
+        </div>
+
+        <form id="booking-form">
+            <div class="form-group">
+                <label for="location">Локация</label>
+                <select id="location" name="location" required>
+                    <option value="" disabled selected hidden>Выберите локацию</option>
+                    <option value="53.188751291768384,45.01246840757612|ул. Володарского, 11">Парковка на улице Володарского</option>
+                    <option value="53.18991001551042,45.01398385569291|ул. Кураева, 10">Парковка на улице Кураева (Многоуровневый Паркинг)</option>
+                    <option value="53.192517817197015,45.01069444224327|ул. Максима Горького, 52">Парковка на улице Максима Горького</option>
+                </select>
+            </div>
+
+            <button type="button" id="selectSpotBtn" class="choose-place">Выбрать место</button>
+
+            <div id="spotModal" class="modal hide">
+                <div class="modal-content">
+                    <span class="close">×</span>
+                    <h3>Выберите парковочное место</h3>
+                    <div class="modal-body">
+                        <div id="spotsList">
+                            <table class="spots-table">
+                                <thead>
+                                    <tr>
+                                        <th>Номер места</th>
+                                        <th>Этаж</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="spotsTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="parkingSchemeContainer">
+                            <h4>План парковки</h4>
+                            <div id="galleryControls" style="display: none;">
+                                <button id="prevFloorBtn" class="gallery-btn">← Назад</button>
+                                <span id="currentFloor">Этаж 1</span>
+                                <button id="nextFloorBtn" class="gallery-btn">Вперед →</button>
+                            </div>
+                            <img id="parkingScheme" src="" alt="Схема парковки" loading="lazy" style="display: none; max-width: 100%; height: auto;">
+                            <p id="noSchemeText" style="display: none;">Плана парковки нет</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirmSpotBtn" class="modal-btn" disabled>Подтвердить выбор</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="spotConfirmationModal" class="modal">
+                <div class="modal-content">
+                    <p id="spotConfirmationText"></p>
+                </div>
+            </div>
+                 
+            <div class="form-group">
+                <label for="price">Стоимость (за час)</label>
+                <input type="text" id="price" name="price" value="Выберите место" readonly />
+            </div>
+    
+            <div class="datetime-container">
+                <div class="form-group">
+                    <label for="start_datetime">Дата и время начала</label>
+                    <input type="datetime-local" id="start_datetime" name="start_datetime" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_datetime">Дата и время окончания</label>
+                    <input type="datetime-local" id="end_datetime" name="end_datetime" required>
+                </div>
+            </div>
+       
+            <input type="hidden" id="selected_spot" name="selected_spot">
+       
+            <button type="button" id="bookButton" class="btn-booking">Забронировать</button>
+        
+            <div id="pastDateModal" class="modal hide">
+                <div class="modal-view">
+                    <span id="modalClosePastDateBtn" class="close">×</span>
+                    <p>Даты не могут быть прошлыми.</p>
+                </div>
+            </div>
+        
+            <div id="timeDifferenceModal" class="modal hide">
+                <div class="modal-view">
+                    <span id="modalCloseTimeDifferenceBtn" class="close">×</span>
+                    <p>Разница между началом и концом должна составлять как минимум 30 минут.</p>
+                </div>
+            </div>   
+        
+            <div id="occupiedParkingModal" class="modal hide">
+                <div class="modal-view">
+                    <span id="modalCloseOccupiedParkingBtn" class="close">×</span>
+                    <p>Выбранный этаж (или парковка) занят(а).</p>
+                </div>
+            </div>
+
+            <div id="spotErrorNotification" class="notification hide">
+                Пожалуйста, выберите парковочное место.
+            </div>
+
+            <div id="bookingInfoModal" class="modal hide">
+                <div class="modal-view">
+                    <span id="modalCloseBookingInfoBtn">×</span>
+                    <div class="modal-header">
+                        <h2 class="info">Информация о бронировании</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p id="bookingInfoMessage"></p>
+                    </div>
+                </div>
+            </div>
+        </form>   
+    </div>
+    
+    <div id="cancellationModal" class="modal {% if show_cancellation_modal %}show{% else %}hide{% endif %}">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ваше бронирование было отменено</h2>
+            <p>{{ cancellation_message }}. Ознакомиться можете через личный кабинет.</p>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', path='/js/main_pg.js') }}?v=1.1"></script>
+</body>
+</html>
